@@ -146,7 +146,7 @@ def main():
             hiMessage = buildPackage(hand)[0]
             com1.sendData(hiMessage)
             print("Esperando resposta do server\n")
-            time.sleep(2)
+            time.sleep(5)
             serverResponseEmpty = com1.rx.getIsEmpty()
             if serverResponseEmpty == True:
                 retry = str(input("Servidor inativo. Tentar novamente? S/N: "))
@@ -177,13 +177,12 @@ def main():
             # Teste número errado
             # dataList = buildPackage(2, content = fileR)
             # Teste tamanho payload errado
-            # dataList = buildPackage(3, content = fileR)
+            dataList = buildPackage(3, content = fileR)
             for pack in dataList:
                 packId = int.from_bytes(pack[6:8], byteorder='big') + 1
                 packN = int.from_bytes(pack[4:6], byteorder='big')
                 print("Mandando pacote {} de {}".format(packId, packN))
                 com1.sendData(pack)
-                time.sleep(1)
                 print("Esperando confirmação")
                 confirm, nRx = com1.getData(14)
 

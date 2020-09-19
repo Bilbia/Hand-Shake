@@ -63,19 +63,17 @@ def main():
             
             header, nRx = com2.getData(10)
             print("Recebendo Header...\n")
-            time.sleep(0.5)
             plSize = int.from_bytes(header[2:4], byteorder='big')
             packN = int.from_bytes(header[4:6], byteorder='big')
             packId = int.from_bytes(header[6:8], byteorder='big')
             if packId != packN - 1:
-                print("O tamanho do pacote está errado")
-                plSize = 114
+                if plSize != 114:
+                    print("O tamanho do pacote está errado")
+                    plSize = 114
             print("Recebendo Payload...\n")
             payload, nRx = com2.getData(plSize)
-            time.sleep(0.5)
             print("Recebendo EOP...\n")
             EOP, nRx = com2.getData(4)
-            time.sleep(0.5)
             packIdCheck = True
             eopCheck = True
 
@@ -94,8 +92,6 @@ def main():
             else: 
                 print("Ordem dos pacotes correta até agora\n")
             
-            print(eop)
-            print(eopHead)
             if eop != eopHead:
                 eopCheck = False
                 print("EOP do pacote {} está incorreto\n".format(packId))
@@ -108,14 +104,13 @@ def main():
             print("Mandando confirmação para o Client\n-------------------------\n")
             confirmMsg = confirmBuilder(packIdCheck, eopCheck)
             com2.sendData(confirmMsg)
-            time.sleep(0.1)
 
         
 
             if packId == (packN-1):
                 get = False
 
-        print(lista_payload)
+        print("Criando imagem")
         imageW = "../imgs/recebidaCopia.png"
         image = b''.join(lista_payload)  
         f = open(imageW, 'wb')
